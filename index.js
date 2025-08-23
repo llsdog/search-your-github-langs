@@ -1,23 +1,20 @@
+import { GithubMsgController } from "/res/js/GithubMsgController.js"
+
 // Get Username activities
 async function getUserActivities(username) {
     try {
-        //fetch repos
-        const response = await fetch(`https://api.github.com/users/${username}/repos`, {
-            headers: {
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
+        //API交互并序列化
+        const apiReposResponse = await fetch(`https://api.github.com/users/${username}/repos`, {headers: {'Accept': 'application/vnd.github.v3+json'}});
+        const apiResponse = await fetch(`https://api.github.com/users/${username}`, {headers: {'Accept': 'application/vnd.github.v3+json'}});
+        const reposResponse = await apiReposResponse.json();
+        const response = await apiResponse.json()
 
-        //check response
-        if (!response.ok) {
-            throw new Error(`视奸失败!Github朝你扔过来了一个${response.status}`);
-        }
+        //创建对象
+        const formatResponse = new GithubMsgController(username, response, reposResponse);
 
-        //Parse data
-        const repos = await response.json();
+        //语言名 : 使用次数 字典创建和排序
         const langs = {};
-
-        repos.forEach(repo => {
+        formatResponse.apiRepoResponse.forEach(repo => {
             const lang = repo.language;
             if (lang) {
                 langs[lang] = (langs[lang] || 0) + 1;
