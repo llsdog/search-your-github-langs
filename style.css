@@ -3,9 +3,10 @@
 }
 
 body > div:nth-of-type(1) {
-    background-image: url("assets/img/LL.jpg");
+    background-image: url("https://www.dmoe.cc/random.php");
     background-size: cover;
     background-attachment: fixed;
+    position: fixed;
 }
 
 .search-form {
